@@ -79,10 +79,9 @@ export const searchPost = async (req, res, next) => {
     // Dynamically search through multiple fields
     const post = await Posts.find({
       $or: [
-        { title: { $regex: value, $options: "i" } },
-        { tags: { $regex: value, $options: "i" } },
-        { categories: {$regex: value, $options: "i" } },
-        { user: { $regex: value, $options: "i" } },
+        { title: { $regex: new RegExp(value, "i") } },
+        { tags: { $regex: new RegExp(value, "i") } },
+        { categories: {$regex: new RegExp(value, "i") } },
       ],
     });
 
