@@ -64,7 +64,7 @@ export const viewAllPosts = async (req, res, next) => {
     const post = await Posts.find().sort({_createdAt: -1});
 
     if (post.length === 0) {
-      return res.status(204).json({message: 'NO POSTS FOUND AT THIS TIME.'});
+      return res.status(204).json({data: 'NO POSTS FOUND AT THIS TIME.'});
     }
     res.status(200).json({success:true, data:post})
   } catch (error) {
@@ -86,7 +86,7 @@ export const searchPost = async (req, res, next) => {
     });
 
     if (post.length === 0) {
-      return res.status(404).json({message: 'NO POSTS FOUND AT THIS TIME.'});
+      return res.status(404).json({data: 'NO POSTS FOUND AT THIS TIME.'});
     }
     res.status(200).json({success:true, data:post})
   } catch (error) {
@@ -99,7 +99,7 @@ export const viewPostsById = async (req, res, next) => {
     const post = await Posts.findById(req.params.id);
 
     if (post.length === 0) {
-      return res.status(404).json({message: 'NO POSTS FOUND AT THIS TIME.'});
+      return res.status(404).json({data: 'NO POSTS FOUND AT THIS TIME.'});
     }
     res.status(201).json({success:true, data:post})
   } catch (error) {
