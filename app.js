@@ -6,9 +6,13 @@ import authRouter from "./routes/auth.routes.js";
 import userRouter from "./routes/user.routes.js";
 import postRouter from "./routes/posts.routes.js";
 import errorMiddleware from "./middleware/error.middleware.js";
+import cors from "cors"
+
 
 const app = express()
+
 app.use(express.json());
+app.use(cors())
 app.use(errorMiddleware);
 app.use(fileUpload());
 
