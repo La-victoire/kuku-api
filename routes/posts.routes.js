@@ -7,11 +7,11 @@ import {
    viewAllPosts, 
    viewPostsById
   } from "../controllers/posts.controller.js";
-import verify from "../middleware/auth.middleware.js";
+import ordinaryRestriction from "../middleware/auth.middleware.js";
 
 const postRouter = Router();
 
-postRouter.post('/create', verify, createPost);
+postRouter.post('/create', ordinaryRestriction, createPost);
 postRouter.get('/view', viewAllPosts);
 postRouter.get('/:id', viewPostsById);
 postRouter.get('/search/:value', searchPost);
