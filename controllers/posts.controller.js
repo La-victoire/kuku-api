@@ -51,7 +51,7 @@ export const createPost = async (req, res, next) => {
         user: req.user._id
       })
 
-      await post.save();
+      await post.save().populate("user", "name username");
 
       res.status(201).json({success:true, message : "POST CREATED SUCCESSFULLY" ,data : post})
     } catch (error) {
