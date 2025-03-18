@@ -1,7 +1,14 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
-  name: {
+  firstname: {
+    type: String,
+    required: [true, 'User Name is required'],
+    trim: true,
+    minLength: 3,
+    maxLength: 30,
+  },
+  lastname: {
     type: String,
     required: [true, 'User Name is required'],
     trim: true,
@@ -24,7 +31,6 @@ const userSchema = new mongoose.Schema({
   },
   profile_img: {
     type: String,
-    match: [/^(https?:\/\/[^\s]+)$/, 'invalid http format']
   },
   bio: {
     type: String,

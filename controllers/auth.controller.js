@@ -9,7 +9,7 @@ export const signUp = async (req, res, next) => {
   session.startTransaction();
 
   try {
-    const {name, email, password, role} = req.body;
+    const {firstname, lastname, email, password, role} = req.body;
 
     const existingUser = await User.findOne({email});
     if (existingUser) {
@@ -21,7 +21,7 @@ export const signUp = async (req, res, next) => {
     const salt = await bcrypt.genSalt(10);
     const encryptedPassword = await bcrypt.hash(password, salt);
 
-    const createUser = await User.create([{name,email,password:encryptedPassword,role: role || "user" }], {session}); 
+    const createUser = await User.create([{firstname,lastname,email,password:encryptedPassword,role: role || "user" }], {session}); 
 
     const token = jwt.sign({ 
       userId : createUser[0]._id
