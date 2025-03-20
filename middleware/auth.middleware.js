@@ -1,5 +1,5 @@
 import  jwt  from "jsonwebtoken";
-import { JWT_SECRET } from "../config/env.js";
+import { ADMIN_ID, JWT_SECRET } from "../config/env.js";
 import User from "../models/users.model.js";
 
 const  ordinaryRestriction = async (req,res,next) => {
@@ -18,6 +18,9 @@ const  ordinaryRestriction = async (req,res,next) => {
 
     if (!user) return res.status(401).json({message: 'Unauthorized access'})
     req.user = user;
+    if (req.session.userId !== ADMIN_ID) {
+      return res.status(403).json({error : "Access denied"})
+    }
   
     next();
     } catch (error) {

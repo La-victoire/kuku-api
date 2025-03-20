@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { JWT_EXPIRES, JWT_SECRET } from "../config/env.js";
+import { ADMIN_ID, JWT_EXPIRES, JWT_SECRET } from "../config/env.js";
 import User from "../models/users.model.js";
 import mongoose from "mongoose";
 
@@ -87,7 +87,31 @@ export const signIn = async (req, res, next) => {
     next(error)
   }
 
+};
 
+export const session = (req, res, next) => {
+  const { adminKey } = req.body;
 
+  try {
+  
+  if (adminKey !== JWT_SECRET) 
+    return res.status(403).json({ error: "Unauthorized"});
+  
+  req.session.userId = ADMIN_ID;
 
-}
+  res.json({message: "ADMIN SESSION SET"});
+  } catch (error) {
+    next(error);
+    console.error(error);
+    
+  }
+};
+
+export const logOut = (req, res, next) => {
+  try {
+    req.session.destroy();
+    res.json({message: "Logged Out"});
+  } catch (error) {
+    next(error);
+  }
+}; 

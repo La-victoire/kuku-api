@@ -11,5 +11,6 @@ export const {
    CLOUD_NAME ,
    CLOUD_API_KEY ,
    CLOUD_API_SECRET ,
-   CLOUD_API_ENV_VARIABLE
+   CLOUD_API_ENV_VARIABLE,
+   ADMIN_ID,
   } = process.env;
