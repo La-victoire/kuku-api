@@ -18,9 +18,7 @@ const  ordinaryRestriction = async (req,res,next) => {
 
     if (!user) return res.status(401).json({message: 'Unauthorized access'})
     req.user = user;
-    if (req.session.userId !== ADMIN_ID) {
-      return res.status(403).json({error : "Access denied"})
-    }
+
   
     next();
     } catch (error) {

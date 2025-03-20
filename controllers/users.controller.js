@@ -1,3 +1,4 @@
+import { ADMIN_ID } from "../config/env.js";
 import User from "../models/users.model.js"
 
 export const getUserById = async (req, res, next) => {
@@ -13,6 +14,10 @@ export const getUserById = async (req, res, next) => {
 
 export const getAllUsers = async (req, res, next) => {
   const users = await User.find({});
+
+  if (req.session.userId !== ADMIN_ID) {
+    return res.status(403).json({error : "Access denied"})
+  }
 
   if (!users) {
     res.status(204).json({message:"NO USER AT THIS TIME !!!"})
