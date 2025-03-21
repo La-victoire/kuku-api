@@ -10,45 +10,39 @@ export const signUp = async (req, res, next) => {
 
   try {
     const {firstname, lastname, email, password, role} = req.body;
-
+    
     const existingUser = await User.findOne({email});
-    const existingEmail = await User.findOne({email:req.body.email});
 
     if (existingUser) {
       const error = new Error("USER ALREADY EXISTS");
       error.statusCode = 409
       throw error;
     } 
-    if (existingEmail) {
-      const error = new Error("Email ALREADY EXISTS");
-      error.statusCode = 409
-      throw error;
-    }
-
+    console.log(existingUser);
     const salt = await bcrypt.genSalt(10);
     const encryptedPassword = await bcrypt.hash(password, salt);
 
-    const createUser = await User.create([{firstname,lastname,email,password:encryptedPassword,role: role || "user" }], {session}); 
-
+    const createUser = await User.create([{firstname,lastname,email,password:encryptedPassword,role:role || "user" }], {session}); 
     const token = jwt.sign({ 
       userId : createUser[0]._id
     },
     JWT_SECRET,
     { expiresIn : JWT_EXPIRES});
-
+    
     session.commitTransaction();
     session.endSession();
-
+    
     res.status(201).json({
       success : true,
       message : "USER CREATED SUCCESSFULLY",
       data : {token , user:createUser[0]}
     });
-
+    
   } catch (error) {
     session.abortTransaction();
     session.endSession();
     next();
+    console.error(error)
   }
 };
 
