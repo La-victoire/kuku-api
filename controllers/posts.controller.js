@@ -3,8 +3,10 @@ import cloudinary from "../config/cloudinary.js"
 
 export const createPost = async (req, res, next) => {
     try {
+
+      
       const {
-         title, 
+        title, 
          description,
          categories, 
          tag, 
@@ -14,10 +16,9 @@ export const createPost = async (req, res, next) => {
          meta,
          content 
         } = req.body ;
-
-    //  console.log("Received request body:", req.body, req.user._id);
-
-      if (!req.user._id || req.user._id === "undefined" ) {
+        
+      const userID = await req.cookies.userID;
+      if (!userID || userID === "undefined" ) {
         const error = new Error("SIGN UP TO CREATE POST");
         error.statusCode = 401 ;
         throw error
@@ -48,10 +49,10 @@ export const createPost = async (req, res, next) => {
         title,description,categories, 
         tag,comments,date,hidden,
         meta, content: contentArray,
-        user: req.user._id
+        user: userID
       })
 
-      await post.save().populate("user", "name username");
+      await post.save();
 
       res.status(201).json({success:true, message : "POST CREATED SUCCESSFULLY" ,data : post})
     } catch (error) {
@@ -97,8 +98,8 @@ export const searchPost = async (req, res, next) => {
 export const viewPostsById = async (req, res, next) => {
   try {
     const post = await Posts.findById(req.params.id).populate("user", "firstname lastname username");
-
-    if (post.length === 0) {
+    
+    if (!post) {
       return res.status(404).json({data: 'NO POSTS FOUND AT THIS TIME.'});
     }
     res.status(201).json({success:true, data:post})

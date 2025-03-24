@@ -29,9 +29,12 @@ const userSchema = new mongoose.Schema({
     lowercase: true,
     match: [/\S+@+\S+.\S+/, 'Please fill a valid email address ']
   },
-  profile_img: {
-    type: String,
-  },
+  profile_img: [{
+    value: { 
+      type: String, 
+      required: true 
+    }
+  }],
   bio: {
     type: String,
     minLength: 10,
@@ -48,6 +51,12 @@ const userSchema = new mongoose.Schema({
     type: String,
     enum: ["user","admin"],
     default: "user",
+  },
+  post: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Post',
+    required: [true, 'User post is required'],
+    index: true
   }
 }, {timestamps: true });
 

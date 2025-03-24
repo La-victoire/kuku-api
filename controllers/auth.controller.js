@@ -9,7 +9,7 @@ export const signUp = async (req, res, next) => {
   session.startTransaction();
 
   try {
-    const {firstname, lastname, email, password, role} = req.body;
+    const {firstname, lastname, email, password,username,profile_img,bio, role} = req.body;
     
     const existingUser = await User.findOne({email});
 
@@ -18,11 +18,37 @@ export const signUp = async (req, res, next) => {
       error.statusCode = 409
       throw error;
     } 
-    console.log(existingUser);
+
+    let profileArray = [ ] ;
+
+    // Add profile picture if available
+      // uploads image to cloudinary
+      const uploadedImage = await cloudinary.uploader.upload(profile_img.tempFilePath, {
+        folder: "user_profile_pic",
+        // This saves the image that was collected from the user in a folder in cloudinary
+      });
+
+      profileArray.push({value: uploadedImage.secure_url});
+
+    
+
     const salt = await bcrypt.genSalt(10);
     const encryptedPassword = await bcrypt.hash(password, salt);
 
-    const createUser = await User.create([{firstname,lastname,email,password:encryptedPassword,role:role || "user" }], {session}); 
+    const createUser = await User.create([
+      {firstname,lastname,email,
+       password:encryptedPassword,role:role || "user",
+       username,profile_img:profileA,bio }
+    ], {session}); 
+
+    res.cookie('userID', existingUser._id, 
+      { 
+        httpOnly:true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: 'strict',
+        maxAge: 24*60*60*1000
+      });
+
     const token = jwt.sign({ 
       userId : createUser[0]._id
     },
@@ -67,6 +93,16 @@ export const signIn = async (req, res, next) => {
       throw error;
     }
   
+    // Setting User ID
+
+    res.cookie('userID', existingUser._id, 
+      { 
+        httpOnly:true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: 'strict',
+        maxAge: 24*60*60*1000
+      });
+
     const token = jwt.sign({userId:existingUser}, JWT_SECRET, {expiresIn : JWT_EXPIRES});
     
     res.status(202).json({

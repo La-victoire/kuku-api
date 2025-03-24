@@ -22,7 +22,7 @@ export const getUserById = async (req, res, next) => {
 
 export const getAllUsers = async (req, res, next) => {
   try {
-    const users = await User.find({});
+    const users = await User.find({}).populate("post", "title");
   
     if (!users) {
       res.status(204).json({message:"NO USER AT THIS TIME !!!"})

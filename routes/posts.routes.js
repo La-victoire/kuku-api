@@ -11,7 +11,7 @@ import ordinaryRestriction from "../middleware/auth.middleware.js";
 
 const postRouter = Router();
 
-postRouter.post('/create', ordinaryRestriction, createPost);
+postRouter.post('/create', createPost);
 postRouter.get('/view', viewAllPosts);
 postRouter.get('/:id', viewPostsById);
 postRouter.get('/search/:value', searchPost);
