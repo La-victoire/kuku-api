@@ -45,7 +45,8 @@ export const signUp = async (req, res, next) => {
       { 
         httpOnly:true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: 'strict',
+        sameSite: "None", // Required for cross-origin requests
+        path: "/", // Make it available for all routes
         maxAge: 24*60*60*1000
       });
 
