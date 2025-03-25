@@ -47,7 +47,7 @@ export const signUp = async (req, res, next) => {
     res.cookie('userID', createUser[0]._id, 
       { 
         httpOnly:true,
-        secure: process.env.NODE_ENV === "production",
+        secure: true,
         sameSite: "None", // Required for cross-origin requests
         path: "/", // Make it available for all routes
         maxAge: 24*60*60*1000
@@ -102,8 +102,9 @@ export const signIn = async (req, res, next) => {
     res.cookie('userID', existingUser._id, 
       { 
         httpOnly:true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: 'strict',
+        secure: true,
+        sameSite: "None", // Required for cross-origin requests
+        path: "/", // Make it available for all routes
         maxAge: 24*60*60*1000
       });
 
