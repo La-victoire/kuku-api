@@ -47,7 +47,8 @@ export const signUp = async (req, res, next) => {
     res.cookie('userID', createUser[0]._id, 
       { 
         httpOnly:true,
-        secure: false,
+        secure: true,
+        sameSite: 'none',
         path: "/",
         maxAge: 24*60*60*1000
       });
@@ -101,7 +102,8 @@ export const signIn = async (req, res, next) => {
     res.cookie('userID', existingUser._id, 
       { 
         httpOnly:true,
-        secure: false,
+        secure: true,
+        sameSite: 'none',
         path: "/",
         maxAge: 24*60*60*1000
       });
