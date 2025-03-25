@@ -41,7 +41,7 @@ export const signUp = async (req, res, next) => {
        username,profile_img:profileArray,bio }
     ], {session}); 
 
-    res.cookie('userID', existingUser._id, 
+    res.cookie('userID', createUser[0]._id, 
       { 
         httpOnly:true,
         secure: process.env.NODE_ENV === "production",
