@@ -32,12 +32,13 @@ export const createPost = async (req, res, next) => {
       if (content) {
         contentArray.push({type:"text", value: content});        
       };
-
-      const uploadedImage = await cloudinary.uploader.upload(coverImage.tempFilePath, {
-        folder: "Cover_pic",
-        // This saves the image that was collected from the user in a folder in cloudinary
-      });
-      coverArray.push({value:uploadedImage.secure_url})
+      if (coverImage) {
+        const uploadedImage = await cloudinary.uploader.upload(coverImage.tempFilePath, {
+          folder: "Cover_pic",
+          // This saves the image that was collected from the user in a folder in cloudinary
+        });
+        coverArray.push({value:uploadedImage.secure_url})
+      }
 
       // Adds file content or image if provided
       if(req.files && req.files.image) {

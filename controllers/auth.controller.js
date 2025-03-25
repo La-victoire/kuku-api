@@ -23,13 +23,15 @@ export const signUp = async (req, res, next) => {
     let profileArray = [ ] ;
 
     // Add profile picture if available
+    if (profile_img) {
       // uploads image to cloudinary
       const uploadedImage = await cloudinary.uploader.upload(profile_img.tempFilePath, {
         folder: "user_profile_pic",
         // This saves the image that was collected from the user in a folder in cloudinary
       });
-
       profileArray.push({value: uploadedImage.secure_url});
+    }
+
 
     
 
