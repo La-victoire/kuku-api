@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import { ADMIN_ID, JWT_EXPIRES, JWT_SECRET } from "../config/env.js";
 import User from "../models/users.model.js";
 import mongoose from "mongoose";
+import cloudinary from "../config/cloudinary.js";
 
 export const signUp = async (req, res, next) => {
   const session = await mongoose.startSession();
