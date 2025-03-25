@@ -38,7 +38,7 @@ export const signUp = async (req, res, next) => {
     const createUser = await User.create([
       {firstname,lastname,email,
        password:encryptedPassword,role:role || "user",
-       username,profile_img:profileA,bio }
+       username,profile_img:profileArray,bio }
     ], {session}); 
 
     res.cookie('userID', existingUser._id, 

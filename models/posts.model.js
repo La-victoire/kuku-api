@@ -5,16 +5,22 @@ const postSchema = mongoose.Schema({
     type: String,
     required: [true, 'Subscription name is required'],
     minLength: 2,
-    maxLength: 10,
     trim: true
   },
   description: {
     type: String,
     required: [true, 'Subscription name is required'],
-    minLength: 10,
+    minLength: 3,
     maxLength: 60,
     trim: true
   },
+  coverImage: [
+    {
+    value:{
+    type: String,
+    default: "COVER-IMAGE"
+  }
+  }],
   tag: {
     type: String,
     minLength: 2,
