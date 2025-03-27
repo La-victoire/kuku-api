@@ -1,6 +1,6 @@
 import express from "express";
 import fileUpload from "express-fileupload"
-import { JWT_SECRET, PORT } from './config/env.js'
+import { JWT_SECRET, NODE_ENV, PORT } from './config/env.js'
 import connectDataBase from "./database/mongodb.js";
 import authRouter from "./routes/auth.routes.js";
 import userRouter from "./routes/user.routes.js";
@@ -31,5 +31,5 @@ app.get('/', (req,res) => (
 connectDataBase()
 
 app.listen(PORT, ()=> {
-  console.log(`App running on http//localhost:${PORT}`)
+  console.log(`App running on ${NODE_ENV} mode`)
 })

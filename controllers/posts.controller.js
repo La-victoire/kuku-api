@@ -72,7 +72,7 @@ export const createPost = async (req, res, next) => {
 
 export const viewAllPosts = async (req, res, next) => {
   try {
-    const post = await Posts.find().sort({_createdAt: -1}).populate("user", "name username");
+    const post = await Posts.find().sort({_createdAt: -1}).populate("user", "name firstname lastname username");
 
     if (post.length === 0) {
       return res.status(204).json({data: 'NO POSTS FOUND AT THIS TIME.'});
@@ -107,7 +107,7 @@ export const searchPost = async (req, res, next) => {
 
 export const viewPostsById = async (req, res, next) => {
   try {
-    const post = await Posts.findById(req.params.id).populate("user", "firstname lastname username");
+    const post = await Posts.findById(req.params.id).populate("user", "name firstname lastname username");
     
     if (!post) {
       return res.status(404).json({data: 'NO POSTS FOUND AT THIS TIME.'});
