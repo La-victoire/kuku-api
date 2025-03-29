@@ -43,8 +43,15 @@ export const signUp = async (req, res, next) => {
        password:encryptedPassword,role:role || "user",
        username,profile_img:profileArray,bio }
     ], {session}); 
+    
+    const token = jwt.sign({ 
+      userId : createUser[0]._id,
+      role: createUser[0].role
+    },
+    JWT_SECRET,
+    { expiresIn : JWT_EXPIRES});
 
-    res.cookie('userID', createUser[0]._id, 
+    res.cookie('Auth', token, 
       { 
         httpOnly:true,
         secure: true,
@@ -53,11 +60,21 @@ export const signUp = async (req, res, next) => {
         maxAge: 24*60*60*1000
       });
 
-    const token = jwt.sign({ 
-      userId : createUser[0]._id
-    },
-    JWT_SECRET,
-    { expiresIn : JWT_EXPIRES});
+    res.cookie('userInfo', JSON.stringify({
+       name: createUser.firstname,
+       username: createUser.username,
+       image: createUser.profile_img,
+       userId : createUser._id,
+      }), 
+      { 
+        httpOnly:false,
+         secure: true,
+         sameSite: 'none',
+         path: "/",
+         maxAge: 24*60*60*1000
+      });
+
+
     
     session.commitTransaction();
     session.endSession();
@@ -99,16 +116,36 @@ export const signIn = async (req, res, next) => {
   
     // Setting User ID
 
-    res.cookie('userID', existingUser._id, 
+    const token = jwt.sign({ 
+      userId : existingUser._id,
+      role : existingUser.role
+    },
+    JWT_SECRET,
+    { expiresIn : JWT_EXPIRES});
+
+    res.cookie('Auth', token, 
       { 
         httpOnly:true,
-        secure: true,
+        secure: false,
         sameSite: 'none',
         path: "/",
         maxAge: 24*60*60*1000
       });
 
-    const token = jwt.sign({userId:existingUser}, JWT_SECRET, {expiresIn : JWT_EXPIRES});
+    res.cookie('userInfo', JSON.stringify({
+       name: existingUser.name ,
+       firstname : existingUser.firstname,
+       username: existingUser.username,
+       image: existingUser.profile_img || null,
+       userId : existingUser._id,
+      }), 
+      { 
+        httpOnly:false,
+         secure: false,
+         sameSite: 'none',
+         path: "/",
+         maxAge: 24*60*60*1000
+      });
     
     res.status(202).json({
       success : true,
@@ -124,23 +161,19 @@ export const signIn = async (req, res, next) => {
 
 };
 
-export const session = (req, res, next) => {
-  const { adminKey } = req.body;
-
+export const editProfile = async (req, res, next) => {
   try {
-  
-  if (adminKey !== JWT_SECRET) 
-    return res.status(403).json({ error: "Unauthorized"});
-  
-  req.session.userId = ADMIN_ID;
+  const userCookie = req.cookies.userInfo;
+  const userInfo = JSON.parse(userCookie);
+  const userID = userInfo.userId;  
+  const profile = await User.findByIdAndUpdate(req.params.id, req.body,{user: userID, new: true});
+    res.json({message: "Profile Edited successfully", data: profile});
+} catch (error) {
+  next(error);
+  res.status(500).json({error: error.message});
+}
+}
 
-  res.json({message: "ADMIN SESSION SET"});
-  } catch (error) {
-    next(error);
-    console.error(error);
-    
-  }
-};
 
 export const logOut = (req, res, next) => {
   try {

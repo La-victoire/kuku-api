@@ -18,8 +18,14 @@ export const createPost = async (req, res, next) => {
          content 
         } = req.body ;
         
-      const userID = await req.cookies.userID;
-      if (!userID || userID === "undefined" ) {
+        console.log("All cookies :", req.cookies)
+      const userAuthentication = req.cookies.Auth;
+      const userCookie = req.cookies.userInfo
+      const userInfo = JSON.parse(userCookie)
+      const userID = userInfo.userId  
+
+
+      if (!userAuthentication || userAuthentication === "undefined" ) {
         const error = new Error("SIGN UP TO CREATE POST");
         error.statusCode = 401 ;
         throw error
@@ -72,7 +78,7 @@ export const createPost = async (req, res, next) => {
 
 export const viewAllPosts = async (req, res, next) => {
   try {
-    const post = await Posts.find().sort({_createdAt: -1}).populate("user", "name firstname lastname username");
+    const post = await Posts.find().sort({_createdAt: 1}).populate("user", "name firstname lastname username");
 
     if (post.length === 0) {
       return res.status(204).json({data: 'NO POSTS FOUND AT THIS TIME.'});
@@ -120,7 +126,10 @@ export const viewPostsById = async (req, res, next) => {
 
 export const editPost = async (req, res, next) => {
   try {
-    const post = await Posts.findByIdAndUpdate(req.params.id, ...req.body,{user: req.user._id, new: true});
+    const userCookie = req.cookies.userInfo;
+    const userInfo = JSON.parse(userCookie);
+    const userID = userInfo.userId;  
+    const post = await Posts.findByIdAndUpdate(req.params.id, req.body,{user: userID, new: true});
       res.json({message: "Post Edited successfully", data: post});
   } catch (error) {
     next(error);

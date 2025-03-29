@@ -15,7 +15,7 @@ postRouter.post('/create', createPost);
 postRouter.get('/view', viewAllPosts);
 postRouter.get('/:id', viewPostsById);
 postRouter.get('/search/:value', searchPost);
-postRouter.put('/edit', editPost);
+postRouter.put('/edit/:id', editPost);
 postRouter.delete('/:id', deletePost);
 
 export default postRouter;
