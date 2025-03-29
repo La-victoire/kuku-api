@@ -126,7 +126,7 @@ export const signIn = async (req, res, next) => {
     res.cookie('Auth', token, 
       { 
         httpOnly:true,
-        secure: false,
+        secure: true,
         sameSite: 'none',
         path: "/",
         maxAge: 24*60*60*1000
@@ -141,7 +141,7 @@ export const signIn = async (req, res, next) => {
       }), 
       { 
         httpOnly:false,
-         secure: false,
+         secure: true,
          sameSite: 'none',
          path: "/",
          maxAge: 24*60*60*1000
