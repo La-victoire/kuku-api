@@ -61,6 +61,9 @@ export const createPost = async (req, res, next) => {
         contentArray.push({ type: "image", value: uploadedImage.secure_url});
       }
 
+      console.log(req.files, coverArray);
+      
+
       const post = new Posts({
         title,description,categories, 
         tag,comments,date,hidden,
