@@ -13,7 +13,7 @@ export const signUp = async (req, res, next) => {
     const {firstname, lastname, email, password,username,profile_img,bio, role} = req.body;
     
     const existingUser = await User.findOne({email});
-
+    const profilePicBuffer = req.files?.profile_img?.buffer
     if (existingUser) {
       const error = new Error("USER ALREADY EXISTS");
       error.statusCode = 409
@@ -23,12 +23,9 @@ export const signUp = async (req, res, next) => {
     let profileArray = [ ] ;
 
     // Add profile picture if available
-    if (profile_img) {
+    if (profilePicBuffer) {
       // uploads image to cloudinary
-      const uploadedImage = await cloudinary.uploader.upload(profile_img.tempFilePath, {
-        folder: "user_profile_pic",
-        // This saves the image that was collected from the user in a folder in cloudinary
-      });
+      const uploadedImage = await uploadToCloudinary(profilePicBuffer);
       profileArray.push({value: uploadedImage.secure_url});
     }
 
