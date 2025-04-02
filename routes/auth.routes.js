@@ -4,9 +4,7 @@ import { upload } from "../config/multer.js";
 
 const authRouter = Router();
 
-const imgUploads = upload.fields({
-  name: "profile_img", maxCount: 1
-});
+const imgUploads = upload.single("profile_img");
 authRouter.post('/signup', imgUploads,
   signUp);
 
