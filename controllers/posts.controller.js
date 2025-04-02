@@ -26,7 +26,7 @@ export const createPost = async (req, res, next) => {
         const userID = userInfo.userId  
 
         // buffer extraction
-        const coverImageBuffer = req.files?.coverImage?.buffer || null ;
+        const coverImageBuffer = req.files?.coverImage?.[0].buffer || null ;
         const contentImageBuffer = req.files?.content?.map(file => file.buffer) || [] ;
 
       if (!userAuthentication || userAuthentication === "undefined" ) {
@@ -147,7 +147,7 @@ export const editPost = async (req, res, next) => {
       return res.status(404).json({message : "POST NOT FOUND"})
     }
     
-    const coverImageBuffer = req.files?.coverImage?.buffer || null;
+    const coverImageBuffer = req.files?.coverImage?.[0].buffer || null;
     const contentImageBuffer = req.files?.content?.map(file => file.buffer) || [];
     
     console.log(req.files)
