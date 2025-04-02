@@ -137,7 +137,7 @@ export const editPost = async (req, res, next) => {
       comments, date, hidden, meta, content, coverImage 
     } = req.body;
     
-    const userCookie = req.cookies;
+    const userCookie = req.cookies.userInfo;
     console.log(userCookie)
     const userInfo = JSON.parse(userCookie);
     const userID = userInfo.userId;  
