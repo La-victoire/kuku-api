@@ -14,7 +14,7 @@ export const signUp = async (req, res, next) => {
     const {firstname, lastname, email, password,username,profile_img,bio, role} = req.body;
     
     const existingUser = await User.findOne({email});
-    const profilePicBuffer = req.files?.profile_img?.[0].buffer
+    const profilePicBuffer = req.file?.profile_img?.buffer
     if (existingUser) {
       const error = new Error("USER ALREADY EXISTS");
       error.statusCode = 409
@@ -175,7 +175,7 @@ export const editProfile = async (req, res, next) => {
       return res.status(404).json({message : "USER NOT FOUND"})
     }
     
-    const profileImageBuffer = req.file?.profile_img?.[0].buffer || null;
+    const profileImageBuffer = req.file?.profile_img?.buffer || null;
     
     console.log(req.file)
     let updatedProfileArray = profile_img || [ ] ;
