@@ -53,14 +53,14 @@ export const createPost = async (req, res, next) => {
       // Add content image buffer if available
       if (coverImageBuffer) {
         const uploadedCover = await uploadToCloudinary(coverImageBuffer);
-        updatedCoverArray = [{ value: uploadedCover.secure_url }]; // Replace old cover
+        coverArray = [{ value: uploadedCover.secure_url }]; // Replace old cover
       }
       if (contentImageBuffer.length > 0) {
         const uploadedContentImages = await Promise.all(
           contentImageBuffer.map(uploadToCloudinary)
         );
         uploadedContentImages.forEach(img => {
-          updatedContentArray.push({ type: "image", value: img.secure_url });
+          contentArray.push({ type: "image", value: img.secure_url });
         });
       }
 
