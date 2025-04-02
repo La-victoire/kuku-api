@@ -12,20 +12,17 @@ import { upload } from "../config/multer.js";
 
 const postRouter = Router();
 
-postRouter.post('/create', 
-  upload.fields([
-    {name: "coverImage", maxCount: 1},
-    {name: "content", maxCount: 5} 
-  ]),
+const imgUploads = upload.fields([
+    {name: 'coverImage', maxCount: 1},
+    {name: 'content', maxCount: 5} 
+  ]);
+
+postRouter.post('/create', imgUploads,
   createPost);
 postRouter.get('/view', viewAllPosts);
 postRouter.get('/:id', viewPostsById);
 postRouter.get('/search/:value', searchPost);
-postRouter.put('/edit/:id',
-  upload.fields([
-    {name: "coverImage", maxCount: 1},
-    {name: "content", maxCount: 5} 
-  ]),
+postRouter.put('/edit/:id', imgUploads,
   editPost);
 postRouter.delete('/:id', deletePost);
 
