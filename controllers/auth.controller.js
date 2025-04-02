@@ -175,9 +175,9 @@ export const editProfile = async (req, res, next) => {
       return res.status(404).json({message : "USER NOT FOUND"})
     }
     
-    const profileImageBuffer = req.files?.profile_img?.[0].buffer || null;
+    const profileImageBuffer = req.file?.profile_img?.[0].buffer || null;
     
-    console.log(req.files)
+    console.log(req.file)
     let updatedProfileArray = profile_img || [ ] ;
 
 
