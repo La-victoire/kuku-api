@@ -51,11 +51,17 @@ export const createPost = async (req, res, next) => {
       }
 
       // Add content image buffer if available
-      if(req.files && contentImageBuffer) {
-        // uploads image to cloudinary
-        const uploadedImage = await uploadToCloudinary(contentImageBuffer);
-        // stores the path or url to where image was stored in cloudinary in the content array
-        contentArray.push({ type: "image", value: uploadedImage.secure_url});
+      if (coverImageBuffer) {
+        const uploadedCover = await uploadToCloudinary(coverImageBuffer);
+        updatedCoverArray = [{ value: uploadedCover.secure_url }]; // Replace old cover
+      }
+      if (contentImageBuffer.length > 0) {
+        const uploadedContentImages = await Promise.all(
+          contentImageBuffer.map(uploadToCloudinary)
+        );
+        uploadedContentImages.forEach(img => {
+          updatedContentArray.push({ type: "image", value: img.secure_url });
+        });
       }
 
       console.log("request file :",req.files,"cover image :", req.files.coverImage, "Array",coverArray);

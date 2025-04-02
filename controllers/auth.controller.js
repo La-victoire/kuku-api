@@ -14,7 +14,7 @@ export const signUp = async (req, res, next) => {
     const {firstname, lastname, email, password,username,profile_img,bio, role} = req.body;
     
     const existingUser = await User.findOne({email});
-    const profilePicBuffer = req.files?.profile_img?.buffer
+    const profilePicBuffer = req.files?.profile_img?.[0].buffer
     if (existingUser) {
       const error = new Error("USER ALREADY EXISTS");
       error.statusCode = 409
@@ -161,22 +161,70 @@ export const signIn = async (req, res, next) => {
 
 export const editProfile = async (req, res, next) => {
   try {
-  const userCookie = req.cookies.userInfo;
-  const userInfo = JSON.parse(userCookie);
-  const userID = userInfo.userId;  
-  const profile = await User.findByIdAndUpdate(req.params.id, req.body,{user: userID, new: true});
-    res.json({message: "Profile Edited successfully", data: profile});
+
+    const {firstname, lastname, email, password,username,profile_img,bio, role} = req.body;
+
+
+    const userCookie = req.cookies.userInfo;
+    const userInfo = JSON.parse(userCookie);
+    const userID = userInfo.userId;  
+
+    
+    const client = await User.findById(req.params.id);
+    if (!client) {
+      return res.status(404).json({message : "USER NOT FOUND"})
+    }
+    
+    const profileImageBuffer = req.files?.profile_img?.[0].buffer || null;
+    
+    console.log(req.files)
+    let updatedProfileArray = profile_img || [ ] ;
+
+
+    if (profileImageBuffer) {
+      const uploadedProfileImage = await uploadToCloudinary(profileImageBuffer);
+      updatedProfileArray = [{ value: uploadedProfileImage.secure_url }]; // Replace old cover
+    }
+
+
+    const updatedClient = await User.findByIdAndUpdate(
+      req.params.id, 
+      {
+        firstname, lastname, email,
+        password,username,profile_img:updatedProfileArray,
+        bio, role,
+        user: userID 
+      }, 
+      { new: true } // Return the updated post
+      )
+    res.status(200).json({message: "Profile edited Successfully", data:updatedClient})
 } catch (error) {
   next(error);
-  res.status(500).json({error: error.message});
+  console.error(error);
+  
 }
 }
 
 
-export const logOut = (req, res, next) => {
+export const logOut = async (req, res, next) => {
   try {
-    req.session.destroy();
-    res.json({message: "Logged Out"});
+    const existingUser = await User.findOne({email});
+  
+    if ( !existingUser ) {
+      const error = new Error('USER NOT FOUND !!!');
+      error.statusCode = 404;
+      throw error;
+    }
+  
+    const isPasswordValid = await bcrypt.compare(password, existingUser.password)
+  
+    if (!isPasswordValid) {
+      const error = new Error('YOUR PASSWORD IS INCORRECT :( ');
+      error.statusCode = 401;
+      throw error;
+    }
+    const end = User.deleteOne(existingUser)
+    res.json({message: "Profile Deleted" });
   } catch (error) {
     next(error);
   }

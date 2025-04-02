@@ -4,16 +4,16 @@ import { upload } from "../config/multer.js";
 
 const authRouter = Router();
 
-authRouter.post('/signup',
-  upload.fields({
-    name: "profile_img", maxCount : 1
-  }),
+const imgUploads = upload.fields({
+  name: "profile_img", maxCount: 1
+});
+authRouter.post('/signup', imgUploads,
   signUp);
 
 authRouter.post('/signin', signIn);
 
-authRouter.put('/edit/:id', editProfile);
+authRouter.put('/edit/:id', imgUploads,editProfile);
 
-authRouter.get('/logout', logOut);
+authRouter.delete('/logout', logOut);
 
 export default authRouter;
