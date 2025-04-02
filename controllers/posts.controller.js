@@ -1,5 +1,6 @@
 import Posts from "../models/posts.model.js";
 import cloudinary from "../config/cloudinary.js"
+import {uploadToCloudinary} from "../app.js"
 
 export const createPost = async (req, res, next) => {
     try {
