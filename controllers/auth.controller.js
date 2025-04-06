@@ -162,8 +162,10 @@ export const signIn = async (req, res, next) => {
 export const editProfile = async (req, res, next) => {
   try {
 
-    const {firstname, lastname, email, password,username,profile_img,bio, role} = req.body;
+    const {firstname, lastname, email, password,username,profile_img,bio,role,phone,occupation,socials,gender,address} = req.body;
 
+    const socialInfo = socials && JSON.parse(socials) 
+    const addressInfo = address && JSON.parse(address)
 
     const userCookie = req.cookies.userInfo;
     const userInfo = JSON.parse(userCookie);
@@ -175,9 +177,8 @@ export const editProfile = async (req, res, next) => {
       return res.status(404).json({message : "USER NOT FOUND"})
     }
     
-    const profileImageBuffer = req.file?.profile_img?.buffer || null;
+    const profileImageBuffer = req.file?.buffer || null;
     
-    console.log(req.file)
     let updatedProfileArray = profile_img || [ ] ;
 
 
@@ -191,7 +192,11 @@ export const editProfile = async (req, res, next) => {
       req.params.id, 
       {
         firstname, lastname, email,
-        password,username,profile_img:updatedProfileArray,
+        password,username,
+        profile_img:updatedProfileArray,
+        socials:socialInfo,
+        address:addressInfo,
+        phone, gender, occupation,
         bio, role,
         user: userID 
       }, 

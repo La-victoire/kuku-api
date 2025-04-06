@@ -144,11 +144,11 @@ export const editPost = async (req, res, next) => {
       comments, date, hidden, meta, content, coverImage 
     } = req.body;
     
-    const userCookie = req.cookies.userInfo;
-    console.log(userCookie)
-    const userInfo = JSON.parse(userCookie);
-    const userID = userInfo.userId;  
-    
+    // const userCookie = req.cookies.userInfo;
+    // console.log(userCookie)
+    // const userInfo = JSON.parse(userCookie);
+    // const userID = userInfo.userId;  
+    const tags = tag && JSON.parse(tag)
     const post = await Posts.findById(req.params.id);
     if (!post) {
       return res.status(404).json({message : "POST NOT FOUND"})
@@ -180,11 +180,11 @@ export const editPost = async (req, res, next) => {
       const updatedPost = await Posts.findByIdAndUpdate(
         req.params.id, 
         {
-          title, description, categories, tag, comments,
+          title, description, categories, tag:tags, comments,
           date, hidden, meta,
           content: updatedContentArray,
           coverImage: updatedCoverArray,
-          user: userID 
+          // user: userID 
         }, 
         { new: true } // Return the updated post
       );

@@ -21,12 +21,12 @@ const postSchema = mongoose.Schema({
     default: "COVER-IMAGE"
   }
   }],
-  tag: {
+  tag: [{
     type: String,
     minLength: 2,
     maxLength: 15,
     trim: true  
-  },
+  }],
   categories: {
     type: String,
     trim: true,
