@@ -144,10 +144,10 @@ export const editPost = async (req, res, next) => {
       comments, date, hidden, meta, content, coverImage 
     } = req.body;
     
-    // const userCookie = req.cookies.userInfo;
-    // console.log(userCookie)
-    // const userInfo = JSON.parse(userCookie);
-    // const userID = userInfo.userId;  
+    const userCookie = req.cookies.userInfo;
+    console.log(userCookie)
+    const userInfo = JSON.parse(userCookie);
+    const userID = userInfo.userId;  
     const tags = tag && JSON.parse(tag)
     const post = await Posts.findById(req.params.id);
     if (!post) {
@@ -184,7 +184,7 @@ export const editPost = async (req, res, next) => {
           date, hidden, meta,
           content: updatedContentArray,
           coverImage: updatedCoverArray,
-          // user: userID 
+          user: userID 
         }, 
         { new: true } // Return the updated post
       );
