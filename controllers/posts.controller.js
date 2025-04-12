@@ -12,6 +12,7 @@ export const createPost = async (req, res, next) => {
          categories, 
          tag, 
          coverImage,
+         contentImage,
          comments, 
          date, 
          hidden,
@@ -28,7 +29,7 @@ export const createPost = async (req, res, next) => {
 
         // buffer extraction
         const coverImageBuffer = req.files?.coverImage?.[0].buffer || null ;
-        const contentImageBuffer = req.files?.content?.map(file => file.buffer) || [] ;
+        const contentImageBuffer = req.files?.contentImage?.map(file => file.buffer) || [] ;
 
       if (!userAuthentication || userAuthentication === "undefined" ) {
         const error = new Error("SIGN UP TO CREATE POST");

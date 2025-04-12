@@ -14,7 +14,7 @@ const postRouter = Router();
 
 const imgUploads = upload.fields([
     {name: 'coverImage', maxCount: 1},
-    {name: 'content', maxCount: 5} 
+    {name: 'contentImage', maxCount: 5} 
   ]);
 
 postRouter.post('/create', imgUploads,
