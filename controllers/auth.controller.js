@@ -28,6 +28,8 @@ export const signUp = async (req, res, next) => {
       // uploads image to cloudinary
       const uploadedImage = await uploadToCloudinary(profilePicBuffer);
       profileArray.push({value: uploadedImage.secure_url});
+    } else {
+      profileArray.push({value: profile_img})
     }
 
 
@@ -210,6 +212,74 @@ export const editProfile = async (req, res, next) => {
 }
 }
 
+export const OauthProfile = async (req, res, next) => {
+  try {
+    const { name, email, profile_img, id } = req.body;
+
+    if (!email || !id) {
+      return res.status(404).json({message: "Please Add Your Email..."})
+    }
+
+    let fullname = { } 
+
+    if (name.includes(' ')) {
+      const [ firstname, lastname ] = name.split(' ');
+      fullname.initialname = firstname
+      fullname.finalname = lastname
+    }
+
+    let user = await User.findOne({email})
+    if (!user) {
+      // Account Creation Logic
+      const genSalt = await bcrypt.genSalt(10)
+      const randomPassword = await bcrypt.hash(id,genSalt);
+
+      user = await User.create({
+        firstname: fullname.initialname || name,
+        lastname: fullname.finalname || "null",
+        email, password:randomPassword,
+        profile_img
+      })
+    }
+
+      const token = jwt.sign({ 
+        userId : user._id,
+        role : user.role
+      },
+      JWT_SECRET,
+      { expiresIn : JWT_EXPIRES});
+  
+      res.cookie('Auth', token, 
+        { 
+          httpOnly:true,
+          secure: true,
+          sameSite: 'none',
+          path: "/",
+          maxAge: 24*60*60*1000
+        });
+  
+      res.cookie('userInfo', JSON.stringify({
+         name: user.name || " ",
+         firstname : user.firstname,
+         username: user.username,
+         image: user.profile_img || null,
+         userId : user._id,
+        }), 
+        { 
+          httpOnly:false,
+           secure: true,
+           sameSite: 'none',
+           path: "/",
+           maxAge: 24*60*60*1000
+        });
+
+      res.status(201).json({successful:true , message:"Successfully Created User" , data:{ user:user}})
+    
+  } catch (error) {
+    next(error);
+    console.error(error);    
+  }
+}
 
 export const logOut = async (req, res, next) => {
   try {
