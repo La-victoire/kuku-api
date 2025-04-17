@@ -249,20 +249,7 @@ export const OauthProfile = async (req, res, next) => {
       JWT_SECRET,
       { expiresIn : JWT_EXPIRES});
   
-      res.cookie('Auth', token, 
-        { 
-          httpOnly:true,
-          secure: true,
-          sameSite: 'none',
-          path: "/",
-          maxAge: 24*60*60*1000
-        });
-  
       res.cookie('userInfo', JSON.stringify({
-         name: user.name || " ",
-         firstname : user.firstname,
-         username: user.username,
-         image: user.profile_img || null,
          userId : user._id,
         }), 
         { 
