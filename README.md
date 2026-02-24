@@ -1,7 +1,7 @@
 # KuKu's Blog backend server 
 
 ## Overview
-KuKu's Blog API is a RESTful API that allows users to create, view, edit, and delete blog posts. It supports authentication using JWT, user role-based restrictions, and media storage via Cloudinary. The API is built using **Node.js, Express.js, MongoDB (via Mongoose), and Cloudinary**.
+KuKu's Blog API is a RESTful Node API that allows users to create, view, edit, and delete blog posts. It supports authentication using JWT, user role-based restrictions, and media storage via Cloudinary. The API is built using **Node.js, Express.js, MongoDB (via Mongoose), and Cloudinary**.
 
 ## Features
 - User authentication (Signup & Signin) with JWT
